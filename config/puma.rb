@@ -29,14 +29,14 @@ app_dir = File.expand_path("../..", __FILE__)
 shared_dir = "#{app_dir}/tmp"
 
 # Set up socket location
-bind "unix://#{shared_dir}/puma.sock"
+bind "unix://#{shared_dir}/sockets/puma.sock"
 
 # Logging
 stdout_redirect "#{app_dir}/log/puma.stdout.log", "#{app_dir}/log/puma.stderr.log", true
 
 # Set master PID and state locations
-pidfile "#{shared_dir}/puma.pid"
-state_path "#{shared_dir}/puma.state"
+pidfile "#{shared_dir}/pids/puma.pid"
+state_path "#{shared_dir}/pids/puma.state"
 
 # Use the `preload_app!` method when specifying a `workers` number.
 # This directive tells Puma to first boot the application and load code

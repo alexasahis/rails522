@@ -1,0 +1,55 @@
+[Unit]
+Description=Puma HTTP Server
+After=network.target
+
+# Uncomment for socket activation (see below)
+#Requires=puma.socket
+
+[Service]
+# Foreground process (do not use --daemon in ExecStart or config.rb)
+#Type=simple
+Type=forking
+
+# Preferably configure a non-privileged user
+User=alex
+Group=alex
+
+# The path to the your application code root directory.
+# Also replace the "<YOUR_APP_PATH>" place holders below with this path.
+# Example /home/username/myapp
+WorkingDirectory=/home/alex/ws/rails522
+PIDFile=/home/alex/ws/rails522/tmp/pids/puma.pid
+#PIDFile=/tmp/puma.pid
+
+# Helpful for debugging socket activation, etc.
+# Environment=PUMA_DEBUG=1
+
+# SystemD will not run puma even if it is in your path. You must specify
+# an absolute URL to puma. For example /usr/local/bin/puma
+# Alternatively, create a binstub with `bundle binstubs puma --path ./sbin` in the WorkingDirectory
+#ExecStart=/<FULLPATH>/bin/puma -C <YOUR_APP_PATH>/puma.rb
+
+# Variant: Rails start.
+#ExecStart=/home/alex/ws/rails522/bin/puma -C /config/puma.rb ../config.ru
+ExecStart=/home/alex/.rvm/gems/ruby-2.6.2@rails522/wrappers/bundle exec puma -C /home/alex/ws/rails522/config/puma.rb
+ExecStop=/home/alex/.rvm/gems/ruby-2.6.2@rails522/wrappers/bundle exec pumactl -S /home/alex/ws/rails522/tmp/pids/puma.state stop
+ExecReload=/home/alex/.rvm/gems/ruby-2.6.2@rails522/wrappers/bundle exec pumactl -S /home/alex/ws/rails522/tmp/pids/puma.state restart
+#ExecReload=/home/alex/.rvm/bin/rvm ruby-2.6.2@rails522 do bundle exec pumactl -S /home/alex/ws/rails522/tmp/pids/puma.state restart
+
+# Variant: Use `bundle exec --keep-file-descriptors puma` instead of binstub
+# Variant: Specify directives inline.
+# ExecStart=/<FULLPATH>/puma -b tcp://0.0.0.0:9292 -b ssl://0.0.0.0:9293?key=key.pem&cert=cert.pem
+
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+
+# systemctl enable puma.service
+# systemctl daemon-reload
+# systemctl status puma.service
+# systemctl -l status puma.service
+# systemd-analyze verify puma.service
+# service puma status
+# service puma start
+# service puma restart
