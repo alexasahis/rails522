@@ -4,7 +4,8 @@
 # the maximum value specified for Puma. Default is set to 5 threads for minimum
 # and maximum; this matches the default thread size of Active Record.
 #
-threads_count = ENV.fetch("RAILS_MAX_THREADS") { 5 }
+#Set the number of threads to desired concurrent requests / number of workers. Puma defaults to 16 and that's a decent number.
+threads_count = ENV.fetch("RAILS_MAX_THREADS") { 16 }
 threads 1, threads_count
 
 # Specifies the `port` that Puma will listen on to receive requests; default is 3000.
@@ -22,8 +23,9 @@ environment ENV.fetch("RAILS_ENV") { "production" }
 # Workers do not work on JRuby or Windows (both of which do not support
 # processes).
 #
+#Use cluster mode and set the number of workers to 1.5x the number of cpu cores in the machine, minimum 2.
 #grep -c processor /proc/cpuinfo --> 1
-workers ENV.fetch("WEB_CONCURRENCY") { 1 }
+workers ENV.fetch("WEB_CONCURRENCY") { 4 }
 
 app_dir = File.expand_path("../..", __FILE__)
 shared_dir = "#{app_dir}/tmp"
